@@ -42,6 +42,11 @@ const User = sequelize.define("User", {
         type: DataTypes.ENUM('admin', 'user'),
         defaultValue: 'user',
         allowNull: false
+    },
+    is_blocked: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull:  false
     }
 },
 {
