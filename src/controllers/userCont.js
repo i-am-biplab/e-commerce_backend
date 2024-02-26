@@ -59,10 +59,12 @@ const signupUser = async (req, res) => {
 // controller for login
 const loginUser = async (req, res) => {
     try {
-        const { email, passwd } = req.body;
-        if (email && passwd) {
+        const { identifier, passwd } = req.body;
+        if (identifier && passwd) {
             const user = await User.findAll({
-                where: { email: email },
+                where: {
+                    [Op.or]: [{ email: identifier }, { mobile: identifier }]
+                },
                 attributes: ["uid", "passwd"]
             });
 
