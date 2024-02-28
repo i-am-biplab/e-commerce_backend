@@ -1,9 +1,22 @@
 const sequelize = require("../db/conn");
-// const Blog = require("./blog");
 const User = require("./user");
+const Product = require("./product");
+const Cart = require("./cart");
+const Address = require("./address");
+const Order = require("./order");
 
-// Blog.belongsTo(User, {foreignKey: "uid"});
+Cart.belongsTo(User, {foreignKey: "user_id"});
+Cart.belongsTo(Product, {foreignKey: "prod_id"});
+Address.belongsTo(User, {foreignKey: "user_id"});
+Order.belongsTo(User, {foreignKey: "user_id"});
+Order.belongsTo(Cart, {foreignKey: "cart_id"});
+Order.belongsTo(Address, {foreignKey: "addr_id"});
 
 (async () => {
-    await sequelize.sync({force: false});
+    await User.sync({force: false});
+    await Product.sync({force: false});
+    await Cart.sync({force: false});
+    await Address.sync({force: false});
+    await Order.sync({force: false});
+    // await sequelize.sync({force: false});
 })();
