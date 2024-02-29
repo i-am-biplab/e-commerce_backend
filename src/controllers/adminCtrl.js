@@ -42,4 +42,9 @@ const unBlockUser = async (req, res) => {
     }
 }
 
-module.exports = { blockUser, unBlockUser }
+// controller for deleting product
+const deleteProduct = async (req, res) => {
+    
+}
+
+module.exports = { blockUser, unBlockUser, deleteProduct }
