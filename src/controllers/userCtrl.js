@@ -13,7 +13,7 @@ const signupUser = async (req, res) => {
 
         if (name && email && mob && passwd && conpasswd) {
             if (passwd === conpasswd) {
-                hashedPasswd = await bcrypt.hash(passwd, 12);
+                const hashedPasswd = await bcrypt.hash(passwd, 12);
 
                 const [user, created] = await User.findOrCreate({
                     where: { 
@@ -61,16 +61,19 @@ const loginUser = async (req, res) => {
     try {
         const { identifier, passwd } = req.body;
         if (identifier && passwd) {
-            const user = await User.findAll({
+            const user = await User.findOne({
                 where: {
                     [Op.or]: [{ email: identifier }, { mobile: identifier }]
                 },
-                attributes: ["uid", "passwd"]
+                attributes: ["uid", "passwd", "is_blocked"]
             });
 
-            if (user.length > 0) {
-                const uid = user[0].uid;
-                const hashedPasswd = user[0].passwd;
+            if (user !== null) {
+                if (user.is_blocked === true) {
+                    return res.status(403).json({message: "The User is blocked"});
+                }
+                const uid = user.uid;
+                const hashedPasswd = user.passwd;
 
                 try {
                     const isMatch = await bcrypt.compare(passwd, hashedPasswd);
@@ -104,4 +107,102 @@ const loginUser = async (req, res) => {
     }
 }
 
-module.exports = { signupUser, loginUser }
+// controller for updating user
+const updateUser = async (req, res) => {
+    const email = req.body.email || null;
+    const mob = req.body.mob || null;
+    const passwd = req.body.passwd || null;
+    
+    if (email && !mob && !passwd) {
+        try {
+            const exist = await User.findOne({
+                attributes: ["email"],
+                where: {
+                    email: email
+                }
+            });
+
+            if (exist !== null){
+                return res.json({isupdated: false, error: "Email already registered"});
+            }
+
+            const affectedRow = await User.update({
+                email: email
+            },
+            {
+                where: {
+                    uid: req.uid
+                }
+            });
+
+            if (affectedRow[0] === 1) {
+                res.status(200).json({ isupdated: true, message: "User email updated successfully" });
+            }
+            else {
+                res.status(500).json({ isupdated: false, message: "User email updation failed" });
+            }
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+            console.log(error);
+        }
+    }
+    else if (!email && mob && !passwd) {
+        try {
+            const exist = await User.findOne({
+                attributes: ["mobile"],
+                where: {
+                    mobile: mob
+                }
+            });
+
+            if (exist !== null){
+                return res.json({isupdated: false, error: "Mobile already registered"});
+            }
+
+            const affectedRow = await User.update({
+                mobile: mob
+            },
+            {
+                where: {
+                    uid: req.uid
+                }
+            });
+
+            if (affectedRow[0] === 1) {
+                res.status(200).json({ isupdated: true, message: "User mobile updated successfully" });
+            }
+            else {
+                res.status(500).json({ isupdated: false, message: "User mobile updation failed" });
+            }
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+            console.log(error);
+        }
+    }
+    else if (!email && !mob && passwd) {
+        try {
+            const hashedPasswd = await bcrypt.hash(passwd, 12);
+
+            const affectedRow = await User.update({
+                passwd: hashedPasswd
+            },
+            {
+                where: {
+                    uid: req.uid
+                }
+            });
+
+            if (affectedRow[0] === 1) {
+                res.status(200).json({ isupdated: true, message: "User password updated successfully" });
+            }
+            else {
+                res.status(500).json({ isupdated: false, message: "User password updation failed" });
+            }
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+            console.log(error);
+        }
+    }
+}
+
+module.exports = { signupUser, loginUser, updateUser }
