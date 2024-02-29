@@ -1,5 +1,4 @@
 const Product = require("../models/product");
-const { search } = require("../routes/authRoutes");
 
 // controller for showing product
 const showProduct = async (req, res) => {
@@ -57,7 +56,20 @@ const searchProduct = async (req, res) => {
     // }
 }
 
-// controller for blocking user
+// controller for adding product
+const addProduct = async (req, res) => {
+    
+}
+
+// controller for updating product
+const updateProduct = async (req, res) => {
+    
+}
+
+// controller for deleting product
+const deleteProduct = async (req, res) => {
+    
+}
 
 
-module.exports = { showProduct, searchProduct }
+module.exports = { showProduct, searchProduct, addProduct, updateProduct, deleteProduct }
