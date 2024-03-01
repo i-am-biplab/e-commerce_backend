@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 01, 2024 at 03:27 AM
--- Server version: 10.4.18-MariaDB
--- PHP Version: 8.0.3
+-- Generation Time: Mar 01, 2024 at 12:39 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -41,7 +41,7 @@ CREATE TABLE `addresses` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -57,7 +57,7 @@ CREATE TABLE `carts` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -76,7 +76,7 @@ CREATE TABLE `orders` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -96,15 +96,17 @@ CREATE TABLE `products` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `products`
 --
 
 INSERT INTO `products` (`pid`, `title`, `desc`, `prod_img`, `categories`, `size`, `color`, `price`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
-(1, 'Product 1', 'Description for Product 1', 'product1.jpg', '\"[\\\"Category A\\\",\\\"Category B\\\"]\"', NULL, 'Blue', '29.99', '2024-02-29 16:28:32', '2024-02-29 16:28:32', NULL),
-(2, 'Product 2', 'Description for Product 2', 'product2.jpg', '\"[\\\"Category C\\\"]\"', 'L', 'Red', '39.99', '2024-02-29 16:51:07', '2024-02-29 16:51:07', NULL);
+(1, 'Product 1', 'Description for Product 1', 'product1.jpg', '\"[\\\"Category A\\\",\\\"Category B\\\"]\"', NULL, 'Blue', 29.99, '2024-02-29 16:28:32', '2024-02-29 16:28:32', NULL),
+(2, 'Product 2', 'Description for Product 2', 'product2.jpg', '\"[\\\"Category C\\\"]\"', 'L', 'Red', 39.99, '2024-02-29 16:51:07', '2024-02-29 16:51:07', NULL),
+(3, 'Apple iPhone 15 Pro (256 GB) - Blue Titanium', 'FORGED IN TITANIUM — iPhone 15 Pro has a strong and light aerospace-grade titanium design with a textured matte-glass back. It also features a Ceramic Shield front that’s tougher than any smartphone glass. And it’s splash, water, and dust resistant.', 'prodImg\\1709287029468_iphone 15 pro.png', '\"[\\\"phone\\\", \\\"mobile\\\", \\\"apple\\\", \\\"iphone\\\"]\"', NULL, 'Blue Titanium', 137990.00, '2024-03-01 09:57:09', '2024-03-01 09:57:09', NULL),
+(4, 'Apple iPhone 15 Pro (128 GB) - Blue Titanium', 'FORGED IN TITANIUM — iPhone 15 Pro has a strong and light aerospace-grade titanium design with a textured matte-glass back. It also features a Ceramic Shield front that’s tougher than any smartphone glass. And it’s splash, water, and dust resistant.', 'prodImg\\1709288514587_iphone 15 pro.png', '\"[\\\"phone\\\", \\\"mobile\\\", \\\"apple\\\", \\\"iphone\\\"]\"', NULL, 'White Titanium', 127990.00, '2024-03-01 10:21:54', '2024-03-01 10:21:54', NULL);
 
 -- --------------------------------------------------------
 
@@ -123,7 +125,7 @@ CREATE TABLE `users` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -205,7 +207,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
