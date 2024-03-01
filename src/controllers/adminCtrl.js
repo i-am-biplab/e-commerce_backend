@@ -4,20 +4,25 @@ const User = require("../models/user");
 const blockUser = async (req, res) => {
     const { userId } = req.body;
 
-    const affectedRow = await User.update({
-        is_blocked: true
-    },
-    {
-        where: {
-            uid: userId
+    try {
+        const affectedRow = await User.update({
+            is_blocked: true
+        },
+        {
+            where: {
+                uid: userId
+            }
+        });
+    
+        if (affectedRow[0] === 1) {
+            res.status(200).json({ isblocked: true, message: "User blocked successfully" });
         }
-    });
-
-    if (affectedRow[0] === 1) {
-        res.status(200).json({ isblocked: true, message: "User blocked successfully" });
-    }
-    else {
-        res.status(500).json({ isblocked: false, message: "User blocking failed" });
+        else {
+            res.status(500).json({ isblocked: false, message: "User blocking failed" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+        console.log(error);
     }
 }
 
@@ -25,20 +30,25 @@ const blockUser = async (req, res) => {
 const unBlockUser = async (req, res) => {
     const { userId } = req.body;
 
-    const affectedRow = await User.update({
-        is_blocked: false
-    },
-    {
-        where: {
-            uid: userId
+    try {
+        const affectedRow = await User.update({
+            is_blocked: false
+        },
+        {
+            where: {
+                uid: userId
+            }
+        });
+    
+        if (affectedRow[0] === 1) {
+            res.status(200).json({ is_unblocked: true, message: "User unblocked successfully" });
         }
-    });
-
-    if (affectedRow[0] === 1) {
-        res.status(200).json({ is_unblocked: true, message: "User unblocked successfully" });
-    }
-    else {
-        res.status(500).json({ is_unblocked: false, message: "User unblocking failed" });
+        else {
+            res.status(500).json({ is_unblocked: false, message: "User unblocking failed" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+        console.log(error);
     }
 }
 
