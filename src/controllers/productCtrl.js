@@ -1,64 +1,87 @@
+const { Op } = require("sequelize");
 const Product = require("../models/product");
 
 // controller for showing product
 const showProduct = async (req, res) => {
     const filter = (req.query.category) ? req.query.category : null;
     console.log(filter);
-    res.send("show product");
+    
+    if (filter) {
+        try {
+            const products = await Product.findAll({
+                attributes: ["pid", "categories", "title", "desc", "prod_img", "size", "color", "price"],
+                where: {
+                    categories: {
+                        [Op.like]: `%${filter}%`
+                    }
+                }
+            });
 
-    // const { userId } = req.body;
+            res.status(200).json({products});
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+            console.log(error);
+        }
+    }
+    else {
+        try {
+            const products = await Product.findAll({
+                attributes: ["pid", "categories", "title", "desc", "prod_img", "size", "color", "price"]
+            });
 
-    // const affectedRow = await User.update({
-    //     is_blocked: true
-    // },
-    // {
-    //     where: {
-    //         uid: userId
-    //     }
-    // });
-
-    // if (affectedRow[0] === 1) {
-    //     res.status(200).json({ isblocked: true, message: "User blocked successfully" });
-    // }
-    // else {
-    //     res.status(500).json({ isblocked: false, message: "User blocking failed" });
-    // }
+            res.status(200).json({products});
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+            console.log(error);
+        }
+    }
 }
 
 // controller for searching product
 const searchProduct = async (req, res) => {
     const search = (req.query.q) ? req.query.q : null;
+    console.log(search);
 
     if (search === null) {
-        console.log("No search query passed");
+        res.status(500).json({ message: "No search query passed" });
     }
     else {
-        console.log(search);
+        try {
+            const products = await Product.findAll({
+                attributes: ["pid", "categories", "title", "desc", "prod_img", "size", "color", "price"],
+                where: {
+                    [Op.or]: {
+                        categories: {
+                            [Op.like]: `%${search}%`
+                        },
+                        title: {
+                            [Op.like]: `%${search}%`
+                        },
+                        desc: {
+                            [Op.like]: `%${search}%`
+                        },
+                        size: {
+                            [Op.like]: `%${search}%`
+                        },
+                        color: {
+                            [Op.like]: `%${search}%`
+                        }
+                    }
+                }
+            });
+
+            res.status(200).json({products});
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+            console.log(error);
+        }
     }
-    res.send("search product");
-
-    // const { userId } = req.body;
-
-    // const affectedRow = await User.update({
-    //     is_blocked: true
-    // },
-    // {
-    //     where: {
-    //         uid: userId
-    //     }
-    // });
-
-    // if (affectedRow[0] === 1) {
-    //     res.status(200).json({ isblocked: true, message: "User blocked successfully" });
-    // }
-    // else {
-    //     res.status(500).json({ isblocked: false, message: "User blocking failed" });
-    // }
 }
 
 // controller for adding product
 const addProduct = async (req, res) => {
-    const { title, desc, prod_img, categories, size, color, price } = req.body;
+    const { title, desc, categories, size, color, price } = req.body;
+    console.log({ title, desc, categories, size, color, price});
     
     // size = (size) ? size : null;
     // color = (color) ? color : null;
@@ -68,7 +91,7 @@ const addProduct = async (req, res) => {
             where: { title },
             defaults: {
                 desc,
-                prod_img,
+                prod_img: "prodImg\\1709291426036_amazon_logo.png",
                 categories,
                 size,
                 color,
@@ -88,6 +111,24 @@ const addProduct = async (req, res) => {
     }
 }
 
+// controller for adding product image
+const addProductImg = async (req, res) => {
+    const filepath = req.file ? req.file.path : null;
+    console.log({ filepath });
+
+    if (!filepath) {
+        res.status(500).json({message: "No file uploaded"});
+    }
+    else {
+        try {
+            
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+            console.log(error);
+        }
+    }
+}
+
 // controller for updating product
 const updateProduct = async (req, res) => {
     
@@ -99,4 +140,4 @@ const deleteProduct = async (req, res) => {
 }
 
 
-module.exports = { showProduct, searchProduct, addProduct, updateProduct, deleteProduct }
+module.exports = { showProduct, searchProduct, addProduct, addProductImg, updateProduct, deleteProduct }
