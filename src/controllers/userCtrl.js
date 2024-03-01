@@ -123,7 +123,7 @@ const updateUser = async (req, res) => {
             });
 
             if (exist !== null){
-                return res.json({isupdated: false, error: "Email already registered"});
+                return res.status(409).json({isupdated: false, error: "Email already registered"});
             }
 
             const affectedRow = await User.update({
@@ -156,7 +156,7 @@ const updateUser = async (req, res) => {
             });
 
             if (exist !== null){
-                return res.json({isupdated: false, error: "Mobile already registered"});
+                return res.status(409).json({isupdated: false, error: "Mobile already registered"});
             }
 
             const affectedRow = await User.update({
