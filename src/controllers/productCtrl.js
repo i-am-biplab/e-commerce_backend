@@ -58,7 +58,34 @@ const searchProduct = async (req, res) => {
 
 // controller for adding product
 const addProduct = async (req, res) => {
+    const { title, desc, prod_img, categories, size, color, price } = req.body;
     
+    // size = (size) ? size : null;
+    // color = (color) ? color : null;
+
+    try {
+        const [product, created] = await Product.findOrCreate({
+            where: { title },
+            defaults: {
+                desc,
+                prod_img,
+                categories,
+                size,
+                color,
+                price
+            }
+        });
+
+        if (created !== true) {
+            res.status(409).json({message: "Product title already exists"});
+        }
+        else {
+            res.status(201).json({message: "Product added successfully"});
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+        console.log(error);
+    }
 }
 
 // controller for updating product

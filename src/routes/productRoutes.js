@@ -1,8 +1,7 @@
 const express = require("express");
 const verifyToken = require("../middlewares/verifyToken");
 const isSeller = require("../middlewares/isSeller");
-const isAdmin = require("../middlewares/isAdmin");
-const { showProduct, searchProduct } = require("../controllers/productCtrl");
+const { showProduct, searchProduct, addProduct, updateProduct, deleteProduct } = require("../controllers/productCtrl");
 
 const router = express.Router();
 
@@ -10,16 +9,10 @@ router.post("/", verifyToken, showProduct);
 
 router.post("/search", verifyToken, searchProduct);
 
-router.get("/add", isSeller, (req, res) => {
-    res.send("Hello product");
-});
+router.post("/add", isSeller, addProduct);
 
-router.get("/update", isSeller, (req, res) => {
-    res.send("Hello product");
-});
+router.post("/update", isSeller, updateProduct);
 
-router.get("/delete", isSeller, (req, res) => {
-    res.send("Hello product");
-});
+router.post("/delete", isSeller, deleteProduct);
 
 module.exports = router;
