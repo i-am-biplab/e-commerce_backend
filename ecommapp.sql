@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 28, 2024 at 12:24 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Mar 01, 2024 at 03:27 AM
+-- Server version: 10.4.18-MariaDB
+-- PHP Version: 8.0.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -41,7 +41,7 @@ CREATE TABLE `addresses` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -57,7 +57,7 @@ CREATE TABLE `carts` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -76,7 +76,7 @@ CREATE TABLE `orders` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -96,7 +96,15 @@ CREATE TABLE `products` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`pid`, `title`, `desc`, `prod_img`, `categories`, `size`, `color`, `price`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
+(1, 'Product 1', 'Description for Product 1', 'product1.jpg', '\"[\\\"Category A\\\",\\\"Category B\\\"]\"', NULL, 'Blue', '29.99', '2024-02-29 16:28:32', '2024-02-29 16:28:32', NULL),
+(2, 'Product 2', 'Description for Product 2', 'product2.jpg', '\"[\\\"Category C\\\"]\"', 'L', 'Red', '39.99', '2024-02-29 16:51:07', '2024-02-29 16:51:07', NULL);
 
 -- --------------------------------------------------------
 
@@ -110,12 +118,12 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `mobile` varchar(255) NOT NULL,
   `passwd` varchar(255) NOT NULL,
-  `role` enum('admin','user') NOT NULL DEFAULT 'user',
+  `role` enum('admin','user','seller') NOT NULL DEFAULT 'user',
   `is_blocked` tinyint(1) NOT NULL DEFAULT 0,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `deletedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
@@ -123,7 +131,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`uid`, `name`, `email`, `mobile`, `passwd`, `role`, `is_blocked`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
 (1, 'Biplab Tarafder', 'biplab.tarafder@dcg.in', '1234567890', '$2b$12$7QsQ.5xl1csxLCcPf8mvBOlWdIzU5h1at76BDlpOEg911acoi.Dcm', 'user', 0, '2024-02-26 09:35:30', '2024-02-26 10:23:27', NULL),
-(2, 'Admin', 'admin@dcg.in', '0123456789', '$2b$12$KGk6WXKCdb7KIZ.EsVJ08uf.ZMMzzQegZAQYb6JXbdgFCXmn4zK3G', 'admin', 0, '2024-02-26 10:21:17', '2024-02-26 10:21:17', NULL);
+(2, 'Admin', 'admin@dcg.in', '0123456789', '$2b$12$KGk6WXKCdb7KIZ.EsVJ08uf.ZMMzzQegZAQYb6JXbdgFCXmn4zK3G', 'admin', 0, '2024-02-26 10:21:17', '2024-02-26 10:21:17', NULL),
+(3, 'Susmita Roy', 'susmita.roy@dcg.in', '5678901234', '$2b$12$lm2bc3UVODtbnDDe0ofYfue8VvtRFopb6COw.IHEM8kKDPPpjcbva', 'user', 0, '2024-02-29 14:11:27', '2024-02-29 14:11:27', NULL),
+(4, 'Aman Gupta', 'aman.gupta@vyapar.in', '1324576809', '$2b$12$CEuWQc8CAnz3XgUlvaMmhu.gT5RqeAGZGCvY6YdL0QFavt9wjkgHu', 'seller', 0, '2024-02-29 14:32:17', '2024-02-29 14:32:17', NULL);
 
 --
 -- Indexes for dumped tables
@@ -195,13 +205,13 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
