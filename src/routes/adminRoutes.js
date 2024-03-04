@@ -8,6 +8,6 @@ router.post("/block-user", isAdmin, blockUser);
 
 router.post("/unblock-user", isAdmin, unBlockUser);
 
-router.post("/delete-product", isAdmin, deleteProduct);
+router.post("/delete-product/:d", isAdmin, deleteProduct);
 
 module.exports = router;

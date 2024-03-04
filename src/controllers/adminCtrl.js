@@ -54,7 +54,25 @@ const unBlockUser = async (req, res) => {
 
 // controller for deleting product
 const deleteProduct = async (req, res) => {
+    const prodId = req.params.d;
+
+    try {
+        const deletedRow = await Product.destroy({
+            where: {
+                pid: prodId
+            }
+        });
     
+        if (deletedRow === 1) {
+            res.status(200).json({ isdeleted: true, message: "Product deleted successfully" });
+        }
+        else {
+            res.status(500).json({ isdeleted: false, message: "Product deletion failed" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+        console.log(error);
+    }
 }
 
 module.exports = { blockUser, unBlockUser, deleteProduct }
