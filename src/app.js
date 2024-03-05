@@ -6,6 +6,8 @@ require("./models/index");
 
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 
@@ -18,6 +20,8 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/product", productRoutes);
+app.use("/cart", cartRoutes);
+app.use("/order", orderRoutes);
 app.use("/profile", profileRoutes);
 app.use("/admin", adminRoutes);
 
