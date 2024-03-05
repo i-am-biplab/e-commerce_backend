@@ -42,7 +42,11 @@ const Product = sequelize.define("Product", {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
-    
+    stock: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        defaultValue: 0
+    }
 },
 {
     paranoid: true

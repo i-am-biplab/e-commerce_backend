@@ -21,9 +21,6 @@ const Cart = sequelize.define("Cart", {
         allowNull: false,
         defaultValue: 1
     }
-},
-{
-    paranoid: true
 });
 
 module.exports = Cart;
