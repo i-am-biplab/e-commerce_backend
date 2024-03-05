@@ -1,5 +1,6 @@
 const sequelize = require("../db/conn");
 const Cart = require("../models/cart");
+const Product = require("../models/product");
 
 // controller for showing product in cart
 const showCart = async (req, res) => {
@@ -7,7 +8,19 @@ const showCart = async (req, res) => {
     
     try {
         const items = await Cart.findAll({
-            attributes: ['cart_id', 'prod_id', 'quantity'],
+            attributes: ['cart_id',
+                        [sequelize.literal('Product.title'), 'title'],
+                        [sequelize.literal('Product.desc'), 'desc'],
+                        [sequelize.literal('Product.prod_img'), 'prod_img'],
+                        [sequelize.literal('Product.categories'), 'categories'],
+                        [sequelize.literal('Product.size'), 'size'],
+                        [sequelize.literal('Product.color'), 'color'],
+                        [sequelize.literal('Product.price'), 'price'],
+                        'quantity'],
+            include: {
+                model: Product,
+                attributes: [],
+            },
             where: {
                 user_id: uid
             }
