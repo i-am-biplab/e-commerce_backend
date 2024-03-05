@@ -9,6 +9,7 @@ const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const addressRoutes = require("./routes/addressRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 
 const port = process.env.PORT || 7000;
@@ -23,6 +24,7 @@ app.use("/product", productRoutes);
 app.use("/cart", cartRoutes);
 app.use("/order", orderRoutes);
 app.use("/profile", profileRoutes);
+app.use("/addresses", addressRoutes);
 app.use("/admin", adminRoutes);
 
 app.get("/", (req, res) => {

@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 // const crypto = require('crypto');
 const User = require("../models/user");
-// const Blog = require("../models/blog");
+const Address = require("../models/address");
 const sequelize = require("../db/conn");
 const { Op } = require("sequelize");
 
@@ -205,4 +205,72 @@ const updateUser = async (req, res) => {
     }
 }
 
-module.exports = { signupUser, loginUser, updateUser }
+const showAllAddr = async (req, res) => {
+    const uid = req.uid;
+
+    try {
+        const result = await Address.findAll({
+            attributes: ['addr_id', 'full_name', 'mob_no', 'line1', 'line2', 'landmark', 'zipCode', 'city', 'state'],
+            where: {
+                user_id: uid
+            }
+        });
+
+        if (result.length === 0) {
+            res.status(404).json({message: "No addresses were found"});
+        }
+        else {
+            res.status(200).json({result});
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+        console.log(error);
+    }
+}
+
+const addNewAddr = async (req, res) => {
+    const uid = req.uid;
+    const { 
+        name = null,
+        mob = null,
+        addrLine1 = null,
+        addrLine2 = null,
+        landmark = null,
+        zip = null,
+        city = null,
+        state = null
+    } = req.body ?? {};
+
+    if (name === null || mob === null || addrLine1 === null || addrLine2 === null || zip === null || city === null || state === null) {
+        res.status(400).json({error: "No field should be null (only landmark optional)"});
+    } else {
+        try {
+            const addr = await Address.create({
+                user_id: uid,
+                full_name: name,
+                mob_no: mob,
+                line1: addrLine1,
+                line2: addrLine2,
+                landmark: landmark,
+                zipCode: zip,
+                city: city,
+                state: state
+            });
+
+            res.status(201).json({message: "Address added successfully"});
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+            console.log(error);
+        }
+    }
+}
+
+const updateAddr = async (req, res) => {
+
+}
+
+const delAddr = async (req, res) => {
+
+}
+
+module.exports = { signupUser, loginUser, updateUser, showAllAddr, addNewAddr, updateAddr, delAddr }
