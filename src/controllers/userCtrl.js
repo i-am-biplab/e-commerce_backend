@@ -205,6 +205,7 @@ const updateUser = async (req, res) => {
     }
 }
 
+// controller for showing user addresses
 const showAllAddr = async (req, res) => {
     const uid = req.uid;
 
@@ -228,6 +229,7 @@ const showAllAddr = async (req, res) => {
     }
 }
 
+// controller for adding new user address
 const addNewAddr = async (req, res) => {
     const uid = req.uid;
     const { 
@@ -265,12 +267,73 @@ const addNewAddr = async (req, res) => {
     }
 }
 
+// controller for updating user address
 const updateAddr = async (req, res) => {
+    const { 
+        name = null,
+        mob = null,
+        addrLine1 = null,
+        addrLine2 = null,
+        landmark = null,
+        zip = null,
+        city = null,
+        state = null
+    } = req.body ?? {};
 
+    if (name === null || mob === null || addrLine1 === null || addrLine2 === null || zip === null || city === null || state === null) {
+        res.status(400).json({error: "No field should be null (only landmark optional)"});
+    } else {
+        try {
+            const affectedRow = await Address.update({
+                full_name: name,
+                mob_no: mob,
+                line1: addrLine1,
+                line2: addrLine2,
+                landmark: landmark,
+                zipCode: zip,
+                city: city,
+                state: state
+            },
+            {
+                where: {
+                    addr_id: req.params.addr_q,
+                    user_id: req.uid
+                }
+            });
+
+            if (affectedRow[0] === 1) {
+                res.status(200).json({ isupdated: true, message: "User address updated successfully" });
+            }
+            else {
+                res.status(500).json({ isupdated: false, message: "User address updation failed" });
+            }
+        } catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+            console.log(error);
+        }
+    }
 }
 
+// controller for deleting user address
 const delAddr = async (req, res) => {
+    try {
+        const deletedRow = await Address.destroy({
+            where: {
+                addr_id: req.params.addr_q,
+                user_id: req.uid
+            }
+        });
 
+        if (deletedRow === 1) {
+            res.status(200).json({ isdeleted: true, message: "Address deleted successfully" });
+        }
+        else {
+            res.status(500).json({ isdeleted: false, message: "Address deletion failed" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+        console.log(error);
+    }
 }
 
 module.exports = { signupUser, loginUser, updateUser, showAllAddr, addNewAddr, updateAddr, delAddr }

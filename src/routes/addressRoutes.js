@@ -8,7 +8,7 @@ router.post("/", verifyToken, showAllAddr);
 
 router.post("/new-address", verifyToken, addNewAddr);
 
-router.post("/update-address", verifyToken, updateAddr);
+router.post("/update-address/:addr_q", verifyToken, updateAddr);
 
 router.post("/delete-address/:addr_q", verifyToken, delAddr);
 
