@@ -17,16 +17,16 @@ const Order = sequelize.define("Order", {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    cart_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
     totalAmount: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
     addr_id: {
         type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    pay_mode: {
+        type: DataTypes.ENUM('UPI', 'COD'),
         allowNull: false
     },
     status: {

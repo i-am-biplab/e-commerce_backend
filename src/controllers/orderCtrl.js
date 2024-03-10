@@ -1,11 +1,62 @@
 const sequelize = require("../db/conn");
 const Cart = require("../models/cart");
+const Product = require("../models/product");
 const Order = require("../models/order");
 
 // controller for checking out products in cart
 const checkoutOrder = async (req, res) => {
-    const uid = req.uid;
-    
+    try {
+        const userId = req.uid;
+        const { addressId, paymentMode } = req.body;
+
+        if (!addressId || !paymentMode) {
+            return res.status(400).json({message: 'Address id and payment mode are required'});
+        }
+
+        const cartItems = await Cart.findAll({
+            where: {
+                user_id: userId
+            },
+            include: {
+                model: Product
+            }
+        });
+
+        if (cartItems.length === 0) {
+            return res.status(400).json({ message: 'Cart is empty' });
+        }
+
+        console.log('Cart Items:', cartItems);
+
+        const order = await Order.create({
+            orderNumber: "OD6587676790",
+            user_id: userId,
+            totalAmount: 0,     // initialize total amount
+            addr_id: addressId,
+            pay_mode: paymentMode
+        });
+
+        // calculate total amount for the order and associate products with quantity
+        let totalAmount = 0;
+        for (const item of cartItems) {
+            const quantity = item.quantity;
+            const price = item.Product.price;
+            totalAmount += quantity * price;
+            await order.addProduct(item.Product, {through: { quantity }}); // Associate product with quantity
+        }
+
+        // Update total amount for the order
+        await order.update({ totalAmount });
+
+        await Cart.destroy({
+            where: { user_id: userId }
+        });
+
+        res.status(200).json({ message: "Order placed successfully", order });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to place order" });
+        console.error("Error while checking out:", error);
+    }
 }
 
 // controller for showing all orders
