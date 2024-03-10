@@ -44,14 +44,24 @@ const addToCart = async (req, res) => {
     const pid = req.params.pid;
     
     try {
-        const result = await Cart.findOne({
+        const product = await Product.findOne({
+            where: {
+                prod_id: pid
+            }
+        });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        const cartItem = await Cart.findOne({
             where: {
                 user_id: uid,
                 prod_id: pid
             }
         });
 
-        if (result === null) {
+        if (cartItem === null && product.stock > 0) {
             await Cart.create({
                 user_id: uid,
                 prod_id: pid,
@@ -59,17 +69,20 @@ const addToCart = async (req, res) => {
     
             res.status(201).json({ iscreated: true, message: "Cart item added successfully" });
         }
-        else {
+        else if (cartItem !== null && cartItem.quantity < product.stock) {
             await Cart.update({
                 quantity: sequelize.literal('quantity + 1')
             },
             {
                 where: {
                     user_id: uid,
-                    cart_id: result.cart_id
+                    cart_id: cartItem.cart_id
                 }
             });
             res.status(200).json({ isincremented: true, message: "Quantity incremented successfully" });
+        }
+        else {
+            res.status(400).json({ message: "Product stock is insufficient" });
         }
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error" });
@@ -85,7 +98,17 @@ const incQty = async (req, res) => {
     try {
         const item = await Cart.findByPk(cid);
 
-        if (item) {
+        if (!item) {
+            return res.status(404).json({ isincremented: false, message: "Item not found" });
+        }
+
+        const product = await Product.findByPk(item.prod_id);
+
+        if (!product) {
+            return res.status(404).json({ isincremented: false, message: "Product not found" });
+        }
+
+        if (item.quantity < product.stock) {
             await Cart.update({
                 quantity: sequelize.literal('quantity + 1')
             },
@@ -98,7 +121,7 @@ const incQty = async (req, res) => {
             res.status(200).json({ isincremented: true, message: "Quantity incremented successfully" });
         }
         else {
-            res.status(500).json({ isincremented: false, message: "Item not found" });
+            res.status(400).json({ isincremented: false, message: "Product stock is insufficient" });
         }
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error" });
