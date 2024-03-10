@@ -28,7 +28,7 @@ const verifyToken = (req, res, next) => {
                     where: { uid: uid }
                 });
 
-                if (user.length === 0) {
+                if (user === null) {
                     return res.status(500).json({ error: "User not found in the database" });
                 }
 
