@@ -69,19 +69,90 @@ const checkoutOrder = async (req, res) => {
 
 // controller for showing all orders
 const showOrders = async (req, res) => {
-    const uid = req.uid;
+    const userId = req.uid;
 
+    try {
+        const orders = await Order.findAll({
+            where: {
+                user_id: userId
+            },
+            include: [
+                {
+                    model: Product,
+                    through: { attributes: ['quantity'] } // include the quantity from the association
+                }
+            ]
+        });
+
+        // formatting the user orders data to include relevant details
+        const userOrders = orders.map(order => ({
+            orderNumber: order.orderNumber,
+            totalAmount: order.totalAmount,
+            status: order.status,
+            products: order.Products.map(product => ({
+                title: product.title,
+                description: product.desc,
+                image: product.prod_img,
+                price: product.price,
+                quantity: product.OrderProduct.quantity // quantity through the association
+            }))
+        }));
+
+        res.status(200).json({ orders: userOrders });
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+        console.error("Error while fetching orders:", error);
+    }
 }
 
 // controller for showing order details
 const orderDetails = async (req, res) => {
-    const uid = req.uid;
+    const userId = req.uid;
+    const ordNo = req.params.ordr_num;
 
+    try {
+        const order = await Order.findOne({
+            where: {
+                orderNumber: ordNo,
+                user_id: userId
+            },
+            include: [
+                {
+                    model: Product,
+                    through: { attributes: ['quantity'] } // include the quantity from the association
+                }
+            ]
+        });
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        // formatting the user specific order data to include relevant details
+        const userOrdersDet = {
+            orderNumber: order.orderNumber,
+            totalAmount: order.totalAmount,
+            status: order.status,
+            addressId: order.addr_id,
+            paymentMode: order.pay_mode,
+            products: order.Products.map(product => ({
+                title: product.title,
+                description: product.desc,
+                price: product.price,
+                quantity: product.OrderProduct.quantity // quantity through the association
+            }))
+        };
+
+        res.status(200).json({ order: userOrdersDet });
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+        console.error("Error while fetching order details:", error);
+    }
 }
 
 // controller for cancelling order
 const cancelOrder = async (req, res) => {
-    const uid = req.uid;
+    const userId = req.uid;
     const ordNo = req.params.ordr_num;
 
     try {
@@ -91,7 +162,7 @@ const cancelOrder = async (req, res) => {
         {
             where: {
                 orderNumber: ordNo,
-                user_id: uid
+                user_id: userId
             }
         });
 
