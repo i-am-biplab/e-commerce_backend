@@ -28,8 +28,16 @@ const checkoutOrder = async (req, res) => {
 
         console.log('Cart Items:', cartItems);
 
+        function generateRandomOrderNumber() {
+            const randomNumber = Math.floor(Math.random() * 90000000) + 10000000;
+            
+            const randomODNumber = "OD" + randomNumber.toString();
+            
+            return randomODNumber;
+        }
+
         const order = await Order.create({
-            orderNumber: "OD6587676790",
+            orderNumber: generateRandomOrderNumber(),
             user_id: userId,
             totalAmount: 0,     // initialize total amount
             addr_id: addressId,
